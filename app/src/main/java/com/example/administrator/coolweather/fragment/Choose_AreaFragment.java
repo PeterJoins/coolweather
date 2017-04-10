@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.coolweather.MainActivity;
 import com.example.administrator.coolweather.R;
 import com.example.administrator.coolweather.WeatherActivity;
 import com.example.administrator.coolweather.db.City;
@@ -98,12 +99,19 @@ public class Choose_AreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectCity = cityList.get(position);
                     queryCounties();
-                }else if (currentLevel ==LEVEL_COUNTRY){
+                } else if (currentLevel == LEVEL_COUNTRY) {
                     String weatherId = countryList.get(position).getWeatherId();
-                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
-                    intent.putExtra("weather_id",weatherId);
-                    startActivity(intent);
-                    getActivity().finish();
+                    if (getActivity() instanceof MainActivity) {
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    } else if (getActivity() instanceof WeatherActivity) {
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+                    }
                 }
             }
         });
@@ -150,20 +158,20 @@ public class Choose_AreaFragment extends Fragment {
     private void queryCounties() {
         titleText.setText(selectCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
-        countryList = DataSupport.where("cityid = ?",String.valueOf(selectCity.getId())).find(Country.class);
-        if (countryList.size() > 0){
+        countryList = DataSupport.where("cityid = ?", String.valueOf(selectCity.getId())).find(Country.class);
+        if (countryList.size() > 0) {
             dataList.clear();
-            for (Country country : countryList){
+            for (Country country : countryList) {
                 dataList.add(country.getCountryName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
             currentLevel = LEVEL_COUNTRY;
-        }else {
+        } else {
             int provinceCode = selectProvince.getProviceCode();
             int cityCode = selectCity.getCityCode();
             String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
-            queryFromServer(address,"country");
+            queryFromServer(address, "country");
         }
 
     }

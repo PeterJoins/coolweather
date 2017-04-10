@@ -7,34 +7,55 @@
     tools:context="com.example.administrator.coolweather.WeatherActivity">
 
     <ImageView
+        android:id="@+id/bing_pic_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/bing_pic_img"
-        android:scaleType="centerCrop"/>
-    <ScrollView
-        android:id="@+id/weather_layout"
-        android:scrollbars="none"
-        android:overScrollMode="never"
+        android:scaleType="centerCrop" />
+    <!--侧拉手动定位-->
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+
+        <!--下拉刷新-->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:orientation="vertical">
-            <!--标题栏-->
-            <include layout="@layout/title"/>
-            <!--当前天气信息-->
-            <include layout="@layout/now"/>
-            <!--最近天气信息-->
-            <include layout="@layout/forecast"/>
-            <!--空气质量信息-->
-            <include layout="@layout/aqi"/>
-            <!--生活建议-->
-            <include layout="@layout/suggestion"/>
+            android:layout_height="match_parent">
 
-        </LinearLayout>
+            <ScrollView
+                android:id="@+id/weather_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none">
 
-    </ScrollView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:orientation="vertical">
+                    <!--标题栏-->
+                    <include layout="@layout/title" />
+                    <!--当前天气信息-->
+                    <include layout="@layout/now" />
+                    <!--最近天气信息-->
+                    <include layout="@layout/forecast" />
+                    <!--空气质量信息-->
+                    <include layout="@layout/aqi" />
+                    <!--生活建议-->
+                    <include layout="@layout/suggestion" />
 
+                </LinearLayout>
+
+            </ScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <fragment
+            android:id="@+id/choose_area_fragment"
+            android:name="com.example.administrator.coolweather.fragment.Choose_AreaFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start" />
+    </android.support.v4.widget.DrawerLayout>
 </FrameLayout>
